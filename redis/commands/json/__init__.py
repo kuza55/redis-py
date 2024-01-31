@@ -1,6 +1,7 @@
 from json import JSONDecodeError, JSONDecoder, JSONEncoder
 
 import redis
+import redis.asyncio as redis_asyncio
 
 from ..helpers import get_protocol_version, nativestr
 from .commands import JSONCommands
@@ -125,7 +126,10 @@ class JSON(JSONCommands):
                 reinitialize_steps=self.client.reinitialize_steps,
                 lock=self.client._lock,
             )
-
+        elif isinstance(self.client, redis_asyncio.RedisCluster):
+            p = AsyncClusterPipeline(
+                client = self.client
+            )
         else:
             p = Pipeline(
                 connection_pool=self.client.connection_pool,
@@ -140,6 +144,10 @@ class JSON(JSONCommands):
 
 
 class ClusterPipeline(JSONCommands, redis.cluster.ClusterPipeline):
+    """Cluster pipeline for the module."""
+
+
+class AsyncClusterPipeline(JSONCommands, redis_asyncio.cluster.ClusterPipeline):
     """Cluster pipeline for the module."""
 
 

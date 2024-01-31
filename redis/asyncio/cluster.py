@@ -1434,6 +1434,9 @@ class ClusterPipeline(AbstractRedis, AbstractRedisCluster, AsyncRedisClusterComm
 
         self._command_stack: List["PipelineCommand"] = []
 
+        self.nodes_manager = self._client.nodes_manager
+        self.set_response_callback = self._client.set_response_callback
+
     async def initialize(self) -> "ClusterPipeline":
         if self._client._initialize:
             await self._client.initialize()

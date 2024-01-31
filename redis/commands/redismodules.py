@@ -84,6 +84,14 @@ class RedisModuleCommands:
 
 
 class AsyncRedisModuleCommands(RedisModuleCommands):
+    def json(self, encoder=JSONEncoder(), decoder=JSONDecoder()):
+        """Access the json namespace, providing support for redis json."""
+
+        from .json import JSON
+
+        jj = JSON(client=self, encoder=encoder, decoder=decoder)
+        return jj
+
     def ft(self, index_name="idx"):
         """Access the search namespace, providing support for redis search."""
 
